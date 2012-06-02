@@ -1,7 +1,7 @@
 traceroute to www.arnes.si (193.2.1.87), 30 hops max, 60 byte packets
  1  192.168.1.1 (192.168.1.1)  0.497 ms  0.901 ms  1.170 ms
  2  107.3.148.1 (107.3.148.1)  27.982 ms  27.993 ms  32.140 ms
- 3  te-4-1-ur01.sffolsom.ca.sfba.comcast.net (68.85.100.121)  16.848 ms  16.929 ms  16.966 ms
+ 3  te-4-1-ur01.sffolsom.ca.sfba.comcast.net (68.85.100.121)  16.848 ms  16.929 ms  *
  4  te-1-2-0-0-ar01.sfsutro.ca.sfba.comcast.net (68.86.143.50)  17.825 ms  18.798 ms  18.925 ms
  5  68.86.91.229 (68.86.91.229)  26.591 ms  27.544 ms  27.664 ms
  6  pos-0-4-0-0-pe01.529bryant.ca.ibone.comcast.net (68.86.87.146)  19.810 ms  16.535 ms  13.481 ms
