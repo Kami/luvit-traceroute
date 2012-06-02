@@ -37,7 +37,7 @@ end
 
 exports.getEmitter = getEmitter
 
-exports['test_parsing_dont_resolve_ips'] = function(test, asserts)
+exports['test_traceroute_dont_resolve_ips'] = function(test, asserts)
   local hopCount = 0
 
   local tr = Traceroute:new('www.arnes.si', {resolveIps = false})
@@ -59,7 +59,7 @@ exports['test_parsing_dont_resolve_ips'] = function(test, asserts)
   end)
 end
 
-exports['test_parsing_resolve_ips'] = function(test, asserts)
+exports['test_traceroute_resolve_ips'] = function(test, asserts)
   local hopCount = 0
 
   local tr = Traceroute:new('www.arnes.si', {resolveIps = true})
