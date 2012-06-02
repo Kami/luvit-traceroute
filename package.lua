@@ -4,5 +4,7 @@ return {
   description = "test library",
   author = "Tomaz Muraus <tomaz@tomaz.me>",
   contributors = {},
-  dependencies = {}
+  dependencies = {
+    ["bourbon"] = "https://github.com/racker/lua-bourbon/zipball/master",
+  }
 }
