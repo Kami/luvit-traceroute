@@ -3,18 +3,9 @@ local Error = require('core').Error
 local table = require('table')
 local childprocess = require('childprocess')
 
-local exports = {}
+local split = require('./utils').split
 
-function split(str, pattern)
-  pattern = pattern or '[^%s]+'
-  if pattern:len() == 0 then pattern = '[^%s]+' end
-  local parts = {__index = table.insert}
-  setmetatable(parts, parts)
-  str:gsub(pattern, parts)
-  setmetatable(parts, nil)
-  parts.__index = nil
-  return parts
-end
+local exports = {}
 
 -- TODO: Move LineEmitter and split into utils or smth
 
@@ -75,6 +66,11 @@ function Traceroute:traceroute()
   end)
 end
 
+function Traceroute:_spawn(cmd, args)
+  local child = childprocess.spawn('traceroute', args)
+  return child
+end
+
 function Traceroute:_run(target)
   local args = {target}
 
@@ -82,7 +78,7 @@ function Traceroute:_run(target)
     table.insert(args, '-n')
   end
 
-  local child = childprocess.spawn('traceroute', args)
+  local child = self:_spawn('traceroute', args)
   local lineEmitter = LineEmitter:new()
   local emitter = Emitter:new()
   local stderrBuffer = ''
