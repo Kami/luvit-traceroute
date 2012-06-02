@@ -58,18 +58,21 @@ end
 
 -- Return an EventEmitter instance which emits 'hop' events for every hop
 function Traceroute:traceroute()
-  local emitter = self:_run(self._target)
 
-  emitter:on('end', function()
-    self:emit('end')
-  end)
+  process.nextTick(function()
+    local emitter = self:_run(self._target)
 
-  emitter:on('hop', function(hop)
-    self:emit('hop', hop)
-  end)
+    emitter:on('end', function()
+      self:emit('end')
+    end)
 
-  emitter:on('error', function(err)
-    self:emit('error', err)
+    emitter:on('hop', function(hop)
+      self:emit('hop', hop)
+    end)
+
+    emitter:on('error', function(err)
+      self:emit('error', err)
+    end)
   end)
 end
 

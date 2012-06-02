@@ -1,7 +1,9 @@
 local utils = require('utils')
 
 local Traceroute = require('../lib/traceroute').Traceroute
+
 local tr = Traceroute:new('www.arnes.si')
+tr:traceroute()
 
 tr:on('hop', function(hop)
   print('hop')
@@ -16,4 +18,3 @@ tr:on('error', function(err)
   print('error: ' .. err.message)
 end)
 
-tr:traceroute()
