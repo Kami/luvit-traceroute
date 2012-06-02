@@ -9,7 +9,8 @@ local utils = require('../lib/utils')
 local exports = {}
 
 -- Mock childprocess
-function getEmitter(filePath)
+function getEmitter(filePath, returnError)
+  local returnError = returnError or false
   local data = fs.readFileSync(filePath)
 
   function get()
@@ -23,10 +24,18 @@ function getEmitter(filePath)
 
     setTimeout(500, function()
       for index, line in ipairs(split) do
-        emitter.stdout:emit('data', line .. '\n')
+        if not returnError then
+          emitter.stdout:emit('data', line .. '\n')
+        else
+          emitter.stderr:emit('data', line .. '\n')
+        end
       end
 
-      emitter:emit('exit', 0)
+      if not returnError then
+        emitter:emit('exit', 0)
+      else
+        emitter:emit('exit', 1)
+      end
     end)
 
     return emitter
@@ -78,6 +87,25 @@ exports['test_traceroute_resolve_ips'] = function(test, asserts)
 
   tr:on('end', function()
     asserts.equals(hopCount, 22)
+    test.done()
+  end)
+end
+
+exports['test_traceroute_error_invalid_hostname'] = function(test, asserts)
+  local hopCount = 0
+  local emittedError = false
+  local tr = Traceroute:new('arnes.si', {resolveIps = true})
+  Traceroute._spawn = exports.getEmitter('./tests/fixtures/error_invalid_hostname.txt', true)
+  tr:traceroute()
+
+  tr:on('hop', function(hop)
+    hopCount = hopCount + 1
+  end)
+
+  tr:on('error', function(err)
+    emittedError = true
+    asserts.equals(hopCount, 0)
+    asserts.ok(err.message:find('Name or service not known'))
     test.done()
   end)
 end
