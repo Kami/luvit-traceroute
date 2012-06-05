@@ -57,6 +57,7 @@ exports['test_traceroute_dont_resolve_ips'] = function(test, asserts)
     hopCount = hopCount + 1
 
     if hopCount == 1 then
+      asserts.equals(hop['hop_number'], hopCount)
       asserts.equals(hop['ip'], '192.168.1.1')
       asserts.dequals(hop['rtts'], {0.496, 0.925, 1.138})
     end
@@ -79,6 +80,7 @@ exports['test_traceroute_resolve_ips'] = function(test, asserts)
     hopCount = hopCount + 1
 
     if hopCount == 3 then
+      asserts.equals(hop['hop_number'], hopCount)
       asserts.equals(hop['host'], 'te-4-1-ur01.sffolsom.ca.sfba.comcast.net')
       asserts.equals(hop['ip'], '68.85.100.121')
       asserts.dequals(hop['rtts'], {16.848, 16.929, nil})
