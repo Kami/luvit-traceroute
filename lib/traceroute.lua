@@ -72,11 +72,14 @@ function Traceroute:_spawn(cmd, args)
 end
 
 function Traceroute:_run(target)
-  local args = {target}
+  local args = {}
 
   if not self._resolveIps then
     table.insert(args, '-n')
   end
+
+  table.insert(args, '-4')
+  table.insert(target)
 
   local child = self:_spawn('traceroute', args)
   local lineEmitter = LineEmitter:new()
