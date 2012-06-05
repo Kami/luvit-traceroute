@@ -123,6 +123,8 @@ function Traceroute:_parseLine(line)
 
   local split = split(line, '[^%s]+')
 
+  result['hop_number'] = tonumber(split[1])
+
   if self._resolveIps then
     hopsIndex = 4
     result['host'] = split[2]
