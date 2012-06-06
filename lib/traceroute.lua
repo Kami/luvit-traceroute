@@ -87,9 +87,15 @@ function Traceroute:_run(target)
   local stderrBuffer = ''
 
   lineEmitter:on('line', function(line)
-    local hop = self:_parseLine(line)
+    local hops = self:_parseLine(line)
+    local hop
 
-    if hop then
+    if not hops then
+      return
+    end
+
+    for i=1, #hops do
+      hop = hops[i]
       emitter:emit('hop', hop)
     end
   end)
@@ -117,40 +123,49 @@ function Traceroute:_run(target)
 end
 
 function Traceroute:_parseLine(line)
-  local result = {}, host, ip, hopsIndex
+  local result = {}, host, ip, hopNumber, dotCount, lastIndex
+  local item = {}
+  local hopsStart = 2
 
   -- Skip first line
   if line:find('traceroute to') then
     return
   end
 
-  local split = split(line, '[^%s]+')
+  -- for now just ignore those
+  line = line:gsub('[!XHNP]', '')
 
-  result['hop_number'] = tonumber(split[1])
+  local splitLine = split(line, '[^%s]+')
 
-  if self._resolveIps then
-    hopsIndex = 4
-    result['host'] = split[2]
-    result['ip'] = split[3]:gsub('%(', ''):gsub('%)', '')
-  else
-    hopsIndex = 3
-    result['ip'] = split[2]:gsub('%(', ''):gsub('%)', '')
-  end
+  hopNumber = tonumber(splitLine[1])
 
-  result['rtts'] = {}
+  local util = require('utils')
 
-  for i=hopsIndex, #split, 1 do
-    value = split[i]
-    if not value:find('ms') then
-      if value == '*' then
-        value = nil
-      else
-        value = tonumber(value)
+  i = hopsStart -- hops start at index 2
+  while i < #splitLine do
+    value = splitLine[i]
+    dotCount = #split(value, '[^%.]+')
+    nextValue = value[i + 2]
+
+    if dotCount == 4 or (value == '*' and i == hopsStart) then
+      if i > hopsStart then
+        -- Insert old item
+        table.insert(result, item)
       end
 
-      table.insert(result['rtts'], value)
+      item = {}
+      item['ip'] = value
+      item['number'] = hopNumber
+      item['rtts'] = {}
+    elseif value ~= 'ms' then
+      value = tonumber(value)
+      table.insert(item['rtts'], value)
     end
+
+    i = i + 1
   end
+
+  table.insert(result, item)
 
   return result
 end
