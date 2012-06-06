@@ -44,7 +44,6 @@ local Traceroute = Emitter:extend()
 function Traceroute:initialize(target, options)
   self._target = target
   self._options = options or {}
-  self._resolveIps = self._options['resolveIps'] or false
 end
 
 -- Return an EventEmitter instance which emits 'hop' events for every hop
@@ -73,10 +72,6 @@ end
 
 function Traceroute:_run(target)
   local args = {}
-
-  if not self._resolveIps then
-    table.insert(args, '-n')
-  end
 
   table.insert(args, '-4')
   table.insert(args, target)
