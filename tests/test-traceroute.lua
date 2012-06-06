@@ -189,7 +189,6 @@ end
 
 exports['test_traceroute_error_invalid_hostname'] = function(test, asserts)
   local hopCount = 0
-  local emittedError = false
   local tr = Traceroute:new('arnes.si', {})
   Traceroute._spawn = exports.getEmitter('./tests/fixtures/error_invalid_hostname.txt', true)
   tr:traceroute()
@@ -199,9 +198,25 @@ exports['test_traceroute_error_invalid_hostname'] = function(test, asserts)
   end)
 
   tr:on('error', function(err)
-    emittedError = true
     asserts.equals(hopCount, 0)
     asserts.ok(err.message:find('Name or service not known'))
+    test.done()
+  end)
+end
+
+exports['test_traceroute_error_ipv6_not_supported'] = function(test, asserts)
+  local hopCount = 0
+  local tr = Traceroute:new('2001:0db8:85a3:0000:0000:8a2e:0370:7334', {})
+  Traceroute._spawn = exports.getEmitter('./tests/fixtures/error_ipv6_not_supported.txt', true)
+  tr:traceroute()
+
+  tr:on('hop', function(hop)
+    hopCount = hopCount + 1
+  end)
+
+  tr:on('error', function(err)
+    asserts.equals(hopCount, 0)
+    asserts.ok(err.message:find('Address family for hostname not supported'))
     test.done()
   end)
 end
