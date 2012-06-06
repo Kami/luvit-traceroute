@@ -42,8 +42,11 @@ end
 local Traceroute = Emitter:extend()
 
 function Traceroute:initialize(target, options)
+  options = options and options or {}
   self._target = target
-  self._options = options or {}
+  self._options = options
+  self._packetLen = options['packetLen'] and options['packetLen'] or 60
+  self._maxTtl = options['maxTtl'] and options['maxTtl'] or 30
 end
 
 -- Return an EventEmitter instance which emits 'hop' events for every hop
@@ -74,7 +77,11 @@ function Traceroute:_run(target)
   local args = {}
 
   table.insert(args, '-4')
+  table.insert(args, '-n')
+  table.insert(args, '-m')
+  table.insert(args, self._maxTtl)
   table.insert(args, target)
+  table.insert(args, self._packetLen)
 
   local child = self:_spawn('traceroute', args)
   local lineEmitter = LineEmitter:new()
