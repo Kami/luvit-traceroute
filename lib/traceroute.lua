@@ -79,7 +79,7 @@ function Traceroute:_run(target)
   end
 
   table.insert(args, '-4')
-  table.insert(target)
+  table.insert(args, target)
 
   local child = self:_spawn('traceroute', args)
   local lineEmitter = LineEmitter:new()
