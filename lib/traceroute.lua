@@ -95,10 +95,15 @@ function Traceroute:_run(target)
     local err
 
     if code == 0 then
-      emitter:emit('end')
+      process.nextTick(function()
+        emitter:emit('end')
+      end)
     else
       err = Error:new('Error: ' .. stderrBuffer)
-      emitter:emit('error', err)
+
+      process.nextTick(function()
+        emitter:emit('error', err)
+      end)
     end
   end)
 
