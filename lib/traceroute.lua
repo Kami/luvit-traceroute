@@ -18,6 +18,7 @@ function Traceroute:initialize(target, options)
   self._options = options
   self._packetLen = options['packetLen'] and options['packetLen'] or 60
   self._maxTtl = options['maxTtl'] and options['maxTtl'] or 30
+  self._waitTime = options['waitTime'] and options['waitTime'] or 5
 
   if net.isIPv4(target) == 4 then
     self._addressType = 'ipv4'
@@ -62,6 +63,8 @@ function Traceroute:_run(target)
   table.insert(args, '-n')
   table.insert(args, '-m')
   table.insert(args, self._maxTtl)
+  table.insert(args, '-w')
+  table.insert(args, self._waitTime)
   table.insert(args, target)
   table.insert(args, self._packetLen)
 
