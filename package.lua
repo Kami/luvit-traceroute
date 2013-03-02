@@ -1,6 +1,6 @@
 return {
   name = "traceroute",
-  version = "0.1.0",
+  version = "0.2.0",
   description = "Luvit wrapper for GNU traceroute command.",
   author = "Tomaz Muraus <tomaz@tomaz.me>",
   contributors = {},
