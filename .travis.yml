@@ -1,0 +1,8 @@
+language: erlang
+
+script:
+  - git submodule update --init
+  - make test
+
+notifications:
+  email: tomaz+travisci@tomaz.me
