@@ -1,0 +1,6 @@
+[submodule "modules/bourbon"]
+	path = modules/bourbon
+	url = https://github.com/racker/luvit-bourbon
+[submodule "modules/line-emitter"]
+	path = modules/line-emitter
+	url = https://github.com/Kami/luvit-line-emitter
