@@ -115,13 +115,16 @@ function Traceroute:_run(target)
 end
 
 function Traceroute:_parseLine(line)
-  local result = {}, host, ip, hopNumber, dotCount, lastIndex
-  local item = {}
-  local hopsStart = 2
+  local result, host, ip, hopsStart, hopNumber, splitLine, value, dotCount,
+        lastIndex, item, i;
+
+  result = {}
+  item = {}
+  hopsStart = 2
 
   -- Skip first line
-  if line:find('traceroute to') then
-    return
+  if line:find('traceroute to') or not line then
+    return false
   end
 
   -- for now just ignore those
@@ -131,13 +134,11 @@ function Traceroute:_parseLine(line)
 
   hopNumber = tonumber(splitLine[1])
 
-  local util = require('utils')
 
   i = hopsStart -- hops start at index 2
   while i < #splitLine do
     value = splitLine[i]
     dotCount = #split(value, '[^%.]+')
-    nextValue = value[i + 2]
 
     if (self:_isAddress(value, self._addressType)) or (value == '*' and i == hopsStart) then
       if i > hopsStart then
