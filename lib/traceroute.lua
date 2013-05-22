@@ -169,8 +169,10 @@ function Traceroute:_isAddress(value, family)
   if family == 'ipv4' then
     dotCount = #split(value, '[^%.]+')
     return dotCount == 4
-  else
+  elseif family == 'ipv6' then
     return value:find(':')
+  else
+    error('Invalid family: ' .. family)
   end
 end
 
